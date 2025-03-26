@@ -1,4 +1,4 @@
-name: Deploy APP on AWS EC2
+name: Deploy APP
 
 on:
   push:
@@ -9,26 +9,29 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
-      run: ls -lha
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
-        python-version: "3.10"  
-    - name: Docker build & run
-      env:
-        PRIVATE_KEY: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-        HOSTNAME: ${{secrets.AWS_SSH_HOSTNAME}}
-      run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${HOSTNAME} '
-          ls -lha
-          docker --version
-          docker images
-          docker build -t app:latest -f ~/Dockerfile &&
-          docker run -it -d -p 8000:8000 --name app app
-          '
+        python-version: "3.10"
+    - name: Login docker Hub
+      run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+    - name: Build docker image
+      run: docker build -t nayteixeira/app .
+    - name: Push image docker
+      run: docker push nayteixeira/app
+  
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull nayteixeira/app:latest
+      - name: Remove docker container
+        run: docker rm -f app
+      - name: Run docker container
+        run: docker run -it -d -p 8000:8000 --name app app
