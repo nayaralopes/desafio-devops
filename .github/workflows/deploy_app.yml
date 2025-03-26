@@ -23,6 +23,6 @@ jobs:
         PRIVATE_KEY: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         HOSTNAME: ${{secrets.AWS_SSH_HOSTNAME}}
       run: |
-        ssh -o StrictHostKeyChecking=no -i {PRIVATE_KEY} ubuntu@${HOSTNAME}
+        ssh -o StrictHostKeyChecking=no -i ${PRIVATE_KEY} ubuntu@${HOSTNAME}
         docker build -t app . &&
         docker run -it -d -p 8000:8000 app
