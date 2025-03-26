@@ -1,0 +1,29 @@
+name: Deploy APP on AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v4
+    - name: Setup python
+      uses: actions/setup-python@v5
+        with:
+          python-version: '3.74'    
+    - name: Docker build & run
+      env:
+        PRIVATE_KEY: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        HOSTNAME: ${{secrets.AWS_SSH_HOSTNAME}}
+        USER_NAME: ubuntu
+      run: |
+        ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${AWS_SSH_HOSTNAME} '
+        docker build -t app . &&
+        docker run -it -d -p 8000:8000 app
