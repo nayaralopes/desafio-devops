@@ -14,10 +14,10 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
-    - name: Setup python
-      uses: actions/setup-python@v5
-        with:
-          python-version: '3.74'    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"  
     - name: Docker build & run
       env:
         PRIVATE_KEY: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
