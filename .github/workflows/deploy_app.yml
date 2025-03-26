@@ -25,6 +25,9 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${HOSTNAME} '
+          ls -lha
+          docker --version
+          docker images
           docker build -t app:latest -f ~/Dockerfile &&
           docker run -it -d -p 8000:8000 --name app app
           '
