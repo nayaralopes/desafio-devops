@@ -29,6 +29,8 @@ Configurei a vm como runner do github actions, fazendo as instalações e config
 
 Usei a própria vm da app como runner do github actions, o que não é ideal
 
+O IP da vm onde será feito o deploy da app, será exibido no output do terraform, usado para execução dos comandos curl
+
 Sobre monitoramento, eu gostaria de ter instalado e configurado o prometheus e grafana com playbook do ansible, mas não consegui aproveitar o tempo e fazer a tempo
 
 De curiosidade, adicionei o recurso do cloudwatch com terraform para monitorar o consumo de cpu da vm da app
