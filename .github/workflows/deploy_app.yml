@@ -34,4 +34,4 @@ jobs:
       - name: Remove docker container
         run: docker rm -f app
       - name: Run docker container
-        run: docker run -it -d -p 8000:8000 --name app app
+        run: docker run -it -d -p 8000:8000 --name app nayteixeira/app
